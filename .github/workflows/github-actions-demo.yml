@@ -1,6 +1,9 @@
 name: Github Actions
 run-name: ${{github.actor}} build-pipeline
 on:
+  push:
+    branches:
+      - main
   pull_request:
     branches:
       - main
@@ -9,9 +12,27 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: build
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+      - name: Install Development Requirements
         run: |
-          echo 'building'
+          python -m pip install -r dev_requirements.txt
+      - name: Linter
+        run: ruff format .
+             ruff check .
+
+  test:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Test
+        run: |
+          pytest
+          
 
   publish:
     needs: [build]
