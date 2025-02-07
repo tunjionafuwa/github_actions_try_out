@@ -59,7 +59,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r dev_requirements.txt
       - name: Run Tests
-        run: pytest
+        run: python -m pytest
   publish:
     needs: [linter]
     runs-on: ubuntu-latest
