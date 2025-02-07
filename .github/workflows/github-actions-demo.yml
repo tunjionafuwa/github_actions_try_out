@@ -23,15 +23,22 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r dev_requirements.txt
-          python -m pip install -r requirements.txt
-    outputs:
-      python-path: ${{ steps.python.outputs.python-path }}
 
 
   linter:
     needs: [setup]
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+      - name: Install Development Requirements
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r dev_requirements.txt
       - name: Linter - Format
         run: ruff format .
       - name: Linter - Check
@@ -41,10 +48,18 @@ jobs:
     needs: [setup]
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+      - name: Install Development Requirements
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r dev_requirements.txt
       - name: Run Tests
         run: pytest
-          
-
   publish:
     needs: [linter]
     runs-on: ubuntu-latest
